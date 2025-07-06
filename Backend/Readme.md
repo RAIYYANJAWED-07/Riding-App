@@ -177,3 +177,114 @@ Validates the incoming request, checks user credentials, generates an authentica
 ### **Notes**
 - The returned `token` can be used for authenticated requests.
 - All fields are case-sensitive.
+
+
+
+## Function: `getUserProfile`
+
+Handles fetching the authenticated user's profile.
+
+---
+
+### **Endpoint**
+`GET /users/profile`
+
+---
+
+### **Description**
+Returns the profile information of the currently authenticated user. Requires a valid authentication token (JWT) to be sent via cookies or the `Authorization` header.
+
+---
+
+### **Headers**
+- `Cookie: token=jwt_token`  
+  or  
+- `Authorization: Bearer jwt_token`
+
+---
+
+### **Responses**
+
+#### **200 OK**
+- **Description:** Returns the authenticated user's profile.
+- **Body:**
+  ```json
+  {
+    "user": {
+      "_id": "user_id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+      // ...other user fields
+    }
+  }
+  ```
+
+#### **401 Unauthorized**
+- **Description:** Missing or invalid authentication token.
+- **Body:**
+  ```json
+  {
+    "message": "Authentication failed"
+  }
+  ```
+
+---
+
+### **Notes**
+- This endpoint is protected and requires authentication.
+
+---
+
+## Function: `logoutUser`
+
+Handles logging out the authenticated user.
+
+---
+
+### **Endpoint**
+`GET /users/logout`
+
+---
+
+### **Description**
+Logs out the currently authenticated user by clearing the authentication token cookie and blacklisting the token. Requires a valid authentication token (JWT).
+
+---
+
+### **Headers**
+- `Cookie: token=jwt_token`  
+  or  
+- `Authorization: Bearer jwt_token`
+
+---
+
+### **Responses**
+
+#### **200 OK**
+- **Description:** User logged out successfully.
+- **Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### **401 Unauthorized**
+- **Description:** Missing or invalid authentication token.
+- **Body:**
+  ```json
+  {
+    "message": "Authentication failed"
+  }
+  ```
+
+---
+
+### **Notes**
+- This endpoint is protected and requires authentication.
+- The token is blacklisted after logout to prevent reuse.
+
+---
