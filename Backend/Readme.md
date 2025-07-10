@@ -288,3 +288,103 @@ Logs out the currently authenticated user by clearing the authentication token c
 - The token is blacklisted after logout to prevent reuse.
 
 ---
+
+## Function: `registerCaptain`
+
+Handles captain registration requests.
+
+---
+
+### **Endpoint**
+`POST /captains/register`
+
+---
+
+### **Description**
+Validates the incoming request, hashes the captain's password, creates a new captain in the database, generates an authentication token, and returns the captain data along with the token.
+
+---
+
+### **Request Body**
+
+```json
+{
+  "firstname": "Jane",
+  "lastname": "Smith",
+  "email": "jane.smith@example.com",
+  "password": "yourpassword",
+  "color": "Red",
+  "plate": "ABC123",
+  "capacity": 4,
+  "vehicleType": "car"
+}
+```
+
+#### **Validation Rules**
+- `firstname`: Required, minimum 3 characters.
+- `lastname`: Optional, minimum 3 characters if provided.
+- `email`: Required, must be a valid email address.
+- `password`: Required, minimum 6 characters.
+- `color`: Required, minimum 3 characters.
+- `plate`: Required, minimum 3 characters.
+- `capacity`: Required, must be a number, minimum 1.
+- `vehicleType`: Required, must be one of `car`, `motorcycle`, or `auto`.
+
+---
+
+### **Responses**
+
+#### **201 Created**
+- **Description:** Captain registered successfully.
+- **Body:**
+  ```json
+  {
+    "captain": {
+      "_id": "captain_id",
+      "fullname": {
+        "firstname": "Jane",
+        "lastname": "Smith"
+      },
+      "email": "jane.smith@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+      // ...other captain fields
+    },
+    "token": "jwt_token"
+  }
+  ```
+
+#### **400 Bad Request**
+- **Description:** Validation failed or missing required fields.
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message",
+        "param": "field",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+---
+
+### **Process Flow**
+1. Validates request body using `express-validator`.
+2. Hashes the password using the captain model's static method.
+3. Creates a new captain with the provided data.
+4. Generates a JWT token for the captain.
+5. Returns the captain object and token in the response.
+
+---
+
+### **Notes**
+- The returned `token` can be used for authenticated requests.
+- All fields are case-sensitive.
+- The endpoint is intended for registering new captains (drivers) in the system.
