@@ -44,6 +44,7 @@ Validates the incoming request, hashes the user's password, creates a new user i
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "user": {
       "_id": "user_id",
       "fullname": {
@@ -52,8 +53,7 @@ Validates the incoming request, hashes the user's password, creates a new user i
       },
       "email": "john.doe@example.com"
       // ...other user fields
-    },
-    "token": "jwt_token"
+    }
   }
   ```
 
@@ -127,6 +127,7 @@ Validates the incoming request, checks user credentials, generates an authentica
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "user": {
       "_id": "user_id",
       "fullname": {
@@ -135,8 +136,7 @@ Validates the incoming request, checks user credentials, generates an authentica
       },
       "email": "john.doe@example.com"
       // ...other user fields
-    },
-    "token": "jwt_token"
+    }
   }
   ```
 
@@ -210,6 +210,7 @@ Returns the profile information of the currently authenticated user. Requires a 
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "user": {
       "_id": "user_id",
       "fullname": {
