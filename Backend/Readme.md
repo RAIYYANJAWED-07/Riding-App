@@ -388,3 +388,215 @@ Validates the incoming request, hashes the captain's password, creates a new cap
 - The returned `token` can be used for authenticated requests.
 - All fields are case-sensitive.
 - The endpoint is intended for registering new captains (drivers) in the system.
+
+---
+
+## Function: `loginCaptain`
+
+Handles captain login requests.
+
+---
+
+### **Endpoint**
+`POST /captains/login`
+
+---
+
+### **Description**
+Validates the incoming request, checks captain credentials, generates an authentication token if credentials are valid, and returns the captain data along with the token.
+
+---
+
+### **Request Body**
+
+```json
+{
+  "email": "jane.smith@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### **Validation Rules**
+- `email`: Required, must be a valid email address.
+- `password`: Required, minimum 6 characters.
+
+---
+
+### **Responses**
+
+#### **200 OK**
+- **Description:** Captain logged in successfully.
+- **Body:**
+  ```json
+  {
+    "captain": {
+      "_id": "captain_id",
+      "fullname": {
+        "firstname": "Jane",
+        "lastname": "Smith"
+      },
+      "email": "jane.smith@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+      // ...other captain fields
+    },
+    "token": "jwt_token"
+  }
+  ```
+
+#### **400 Bad Request**
+- **Description:** Validation failed or missing required fields.
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message",
+        "param": "field",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### **401 Unauthorized**
+- **Description:** Invalid email or password.
+- **Body:**
+  ```json
+  {
+    "message": "invalid email or password"
+  }
+  ```
+
+---
+
+### **Process Flow**
+1. Validates request body using `express-validator`.
+2. Finds the captain by email and checks the password.
+3. Generates a JWT token if credentials are valid.
+4. Returns the captain object and token in the response.
+
+---
+
+### **Notes**
+- The returned `token` can be used for authenticated requests.
+- All fields are case-sensitive.
+
+---
+
+## Function: `getCaptainProfile`
+
+Handles fetching the authenticated captain's profile.
+
+---
+
+### **Endpoint**
+`GET /captains/profile`
+
+---
+
+### **Description**
+Returns the profile information of the currently authenticated captain. Requires a valid authentication token (JWT) to be sent via cookies or the `Authorization` header.
+
+---
+
+### **Headers**
+- `Cookie: token=jwt_token`  
+  or  
+- `Authorization: Bearer jwt_token`
+
+---
+
+### **Responses**
+
+#### **200 OK**
+- **Description:** Returns the authenticated captain's profile.
+- **Body:**
+  ```json
+  {
+    "captain": {
+      "_id": "captain_id",
+      "fullname": {
+        "firstname": "Jane",
+        "lastname": "Smith"
+      },
+      "email": "jane.smith@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+      // ...other captain fields
+    }
+  }
+  ```
+
+#### **401 Unauthorized**
+- **Description:** Missing or invalid authentication token.
+- **Body:**
+  ```json
+  {
+    "message": "Authentication failed"
+  }
+  ```
+
+---
+
+### **Notes**
+- This endpoint is protected and requires authentication.
+
+---
+
+## Function: `logoutCaptain`
+
+Handles logging out the authenticated captain.
+
+---
+
+### **Endpoint**
+`GET /captains/logout`
+
+---
+
+### **Description**
+Logs out the currently authenticated captain by clearing the authentication token cookie and blacklisting the token. Requires a valid authentication token (JWT).
+
+---
+
+### **Headers**
+- `Cookie: token=jwt_token`  
+  or  
+- `Authorization: Bearer jwt_token`
+
+---
+
+### **Responses**
+
+#### **200 OK**
+- **Description:** Captain logged out successfully.
+- **Body:**
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+#### **401 Unauthorized**
+- **Description:** Missing or invalid authentication token.
+- **Body:**
+  ```json
+  {
+    "message": "Authentication failed"
+  }
+  ```
+
+---
+
+### **Notes**
+- This endpoint is protected and requires authentication.
+- The token is blacklisted after logout to prevent reuse.
