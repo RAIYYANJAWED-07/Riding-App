@@ -339,6 +339,7 @@ Validates the incoming request, hashes the captain's password, creates a new cap
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "captain": {
       "_id": "captain_id",
       "fullname": {
@@ -353,8 +354,7 @@ Validates the incoming request, hashes the captain's password, creates a new cap
         "vehicleType": "car"
       }
       // ...other captain fields
-    },
-    "token": "jwt_token"
+    }
   }
   ```
 
@@ -429,6 +429,7 @@ Validates the incoming request, checks captain credentials, generates an authent
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "captain": {
       "_id": "captain_id",
       "fullname": {
@@ -443,8 +444,7 @@ Validates the incoming request, checks captain credentials, generates an authent
         "vehicleType": "car"
       }
       // ...other captain fields
-    },
-    "token": "jwt_token"
+    }
   }
   ```
 
@@ -518,6 +518,7 @@ Returns the profile information of the currently authenticated captain. Requires
 - **Body:**
   ```json
   {
+    "token": "jwt_token",
     "captain": {
       "_id": "captain_id",
       "fullname": {
